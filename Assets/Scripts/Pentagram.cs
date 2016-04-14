@@ -43,6 +43,7 @@ public class Pentagram : MonoBehaviour {
 				//yield
 				Debug.Log("GANHOUOUUUUU");
 				Handheld.Vibrate();
+				GameObject.Find("Cursor").gameObject.SetActive(false);
 				ending = true;
 				pentagramParticles.loop = true;
 				pentagramParticles.Play();

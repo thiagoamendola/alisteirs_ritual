@@ -70,9 +70,9 @@ public class Enemy : IsometricObject {
 	
 	// Update is called once per frame
 	void Update () {
+		animator.SetInteger("Action",animState2);
 		if(base.active){
 			animator.SetInteger("Dir",animState);
-			animator.SetInteger("Action",animState2);
 			switch(state){
 				case EnemyStates.Pursuing:
 					//Perseguir player

@@ -8,6 +8,8 @@ public class MagicHandler : MonoBehaviour {
 
 	public GameObject Soul;
 	public GameObject Thunder;
+	public GameObject cursor;
+	public LayerMask groundLayer;
 	Player player;
 
 	public AudioClip soulStealSound;
@@ -30,6 +32,7 @@ public class MagicHandler : MonoBehaviour {
 		active = true;
 		initTouch = new Vector3(0, 0, 0);
 		player = transform.parent.GetComponent<Player>();
+		cursor.SetActive(false);
 	}
 	
 	// Update is called once per frame
@@ -49,8 +52,17 @@ public class MagicHandler : MonoBehaviour {
 					//Debug.Log(hit.collider.gameObject.name);
 					interactObject = hit.collider.gameObject;
 					initTouch = hit.point;
-
 				}
+
+				//Place cursor
+				Vector3 groundPos = new Vector3();
+		    	if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer)){
+		    		groundPos = hit.point;
+		    	}
+				cursor.SetActive(true);
+				cursor.transform.position = new Vector3(groundPos.x, 0, groundPos.z);
+				cursor.GetComponent<SpriteRenderer>().color = Color.white;
+
 
 			//EVENT - MOUSE HOLD
 		 	}else if (Input.GetMouseButton(0) && mouseHold){
@@ -69,6 +81,8 @@ public class MagicHandler : MonoBehaviour {
 					}
 				}
 
+				cursor.GetComponent<SpriteRenderer>().color = Color.white;
+
 				//Check if it was a hold
 		 		if(mouseHoldTime > CLICKMAXTIME && mouseHold){
 		 			//Holdou!		 	
@@ -77,9 +91,23 @@ public class MagicHandler : MonoBehaviour {
 						if(interactObject.tag == "Enemy"){
 			 				//Steal it's soul!!!
 			 				StealSoul(interactObject);
+
+			 				//Change cursor
+			 				if(mouseHold && interactObject.GetComponent<Enemy>().active){				 		
+								cursor.GetComponent<SpriteRenderer>().color = new Color(0,.5f,1);
+							}
+			 			}else{
+							cursor.GetComponent<SpriteRenderer>().color = Color.white;
 			 			}
-		 			}	
+		 			}
 		 		}
+
+		 		//Cursor follow
+				Vector3 groundPos = new Vector3();
+				if (Physics.Raycast(ray, out hit, Mathf.Infinity, groundLayer)){
+					groundPos = hit.point;
+				}
+				cursor.transform.position = new Vector3(groundPos.x, 0, groundPos.z);
 
 		 	//Event - MOUSE UP
 		 	}else if (Input.GetMouseButtonUp(0)){
@@ -99,6 +127,10 @@ public class MagicHandler : MonoBehaviour {
 		 			//End of hold
 					ReleaseSoul(interactObject);
 		 		}
+
+		 		//Hide cursor
+				cursor.SetActive(false);
+
 
 		 		mouseHold = false;    
 		 	}
@@ -149,11 +181,13 @@ public class MagicHandler : MonoBehaviour {
 				//Debug.Log("Terminou");
 				SoundController.instance.StopLoop(transform.GetComponent<AudioSource>());
 				Destroy(soulInstance);
+				cursor.GetComponent<SpriteRenderer>().color = Color.white;
 				enScript.Die();
 				mouseHold = false;
 				player.StealSuccess();
 				//Ganhar alma
 				GameObject.Find("Pentagrama").GetComponent<Pentagram>().GatherSoul();
+				//Paint cursor
 			}else{
 				//Keep Sugando. Fazer Lerp da alma
 				Vector3 target = new Vector3(0,0,0);
