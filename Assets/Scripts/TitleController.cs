@@ -74,4 +74,8 @@ public class TitleController : MonoBehaviour {
 		SoundController.instance.PlaySingle(clickSound);
 		Application.LoadLevel("Instr");
 	}
+
+	public void GoToSite(){
+		Application.OpenURL("https://play.google.com/store/apps/details?id=com.Gamux.alisteirsritual");
+	}
 }

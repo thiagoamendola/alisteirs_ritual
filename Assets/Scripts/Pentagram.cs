@@ -42,7 +42,7 @@ public class Pentagram : MonoBehaviour {
 			if(gatheredSouls >= SOULSTOWIN){
 				//yield
 				Debug.Log("GANHOUOUUUUU");
-				Handheld.Vibrate();
+				//Handheld.Vibrate();
 				GameObject.Find("Cursor").gameObject.SetActive(false);
 				ending = true;
 				pentagramParticles.loop = true;
@@ -54,7 +54,7 @@ public class Pentagram : MonoBehaviour {
 
 	public void GatherSoul(){
 		gatheredSouls++;
-		Handheld.Vibrate();
+		//Handheld.Vibrate();
 		pentagramParticles.Play();
 		gameInterface.UpdateSouls((int)gatheredSouls);
 		SoundController.instance.PlaySingle(soulGatheredSound);
