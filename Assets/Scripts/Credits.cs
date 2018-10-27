@@ -3,25 +3,27 @@ using System.Collections;
 
 public class Credits : MonoBehaviour {
 
-	public float speed = 1;
-	public float startY;
-	public float endY;
+	public float duration = 10;
+	public RectTransform startRef;
+	public RectTransform endRef;
 	public AudioClip music;
 
 	RectTransform credits;
+	float lerpCounter;
 
 	// Use this for initialization
 	void Start () {
+        lerpCounter = 0;
 		credits = transform.Find("Credits").GetComponent<RectTransform>();
-		credits.position = new Vector3(credits.position.x, startY, credits.position.z);
+		credits.localPosition = startRef.localPosition;
 		SoundController.instance.PlayLoop(music, transform.GetComponent<AudioSource>());
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		credits.Translate((speed * Time.deltaTime) * Vector3.up);
-		Debug.Log(credits.position.y);		
-		if(credits.position.y > endY)
+		lerpCounter += Time.deltaTime/duration;
+		credits.localPosition = Vector3.Lerp(startRef.localPosition, endRef.localPosition, lerpCounter);
+		if(lerpCounter > 1)
 			ReturnTitle();
 	}
 
